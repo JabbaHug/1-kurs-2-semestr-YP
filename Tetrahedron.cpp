@@ -1,64 +1,50 @@
 #include "Tetrahedron.h"
-#include <iostream>
 #include <cmath>
 #include <stdexcept>
+#include <cfloat>
 
 using namespace std;
 
 /**
- * @brief Реализация конструктора с проверкой корректности параметров.
+ * @brief Конструктор с инициализацией точек
  */
-Tetrahedron::Tetrahedron(double ax, double ay, double az,
-                         double bx, double by, double bz,
-                         double cx, double cy, double cz,
-                         double dx, double dy, double dz)
-    : x1(ax), y1(ay), z1(az),
-      x2(bx), y2(by), z2(bz),
-      x3(cx), y3(cy), z3(cz),
-      x4(dx), y4(dy), z4(dz)
+Tetrahedron::Tetrahedron(const Point& A,
+                         const Point& B,
+                         const Point& C,
+                         const Point& D)
+    : A(A), B(B), C(C), D(D)
 {
     validate();
 }
 
 /**
- * @brief Проверяет, что точки не лежат в одной плоскости.
+ * @brief Проверка существования тетраэдра
  */
 void Tetrahedron::validate() const {
-    if (abs(volume()) < 1e-9)
-        throw invalid_argument("Points must not be coplanar.");
+    if (fabs(volume()) < DBL_EPSILON)
+        throw invalid_argument("Tetrahedron does not exist (points are coplanar).");
 }
 
 /**
- * @brief Вычисляет объём тетраэдра через смешанное произведение.
+ * @brief Вычисление объёма через смешанное произведение
  */
 double Tetrahedron::volume() const {
-    double ax = x2 - x1;
-    double ay = y2 - y1;
-    double az = z2 - z1;
+    const double ax = B.x - A.x;
+    const double ay = B.y - A.y;
+    const double az = B.z - A.z;
 
-    double bx = x3 - x1;
-    double by = y3 - y1;
-    double bz = z3 - z1;
+    const double bx = C.x - A.x;
+    const double by = C.y - A.y;
+    const double bz = C.z - A.z;
 
-    double cx = x4 - x1;
-    double cy = y4 - y1;
-    double cz = z4 - z1;
+    const double cx = D.x - A.x;
+    const double cy = D.y - A.y;
+    const double cz = D.z - A.z;
 
-    double triple =
+    const double triple =
         ax * (by * cz - bz * cy)
       - ay * (bx * cz - bz * cx)
       + az * (bx * cy - by * cx);
 
-    return abs(triple) / 6.0;
-}
-
-/**
- * @brief Печатает параметры тетраэдра и его объём.
- */
-void Tetrahedron::print() const {
-    cout << "Point A: (" << x1 << ", " << y1 << ", " << z1 << ")" << endl;
-    cout << "Point B: (" << x2 << ", " << y2 << ", " << z2 << ")" << endl;
-    cout << "Point C: (" << x3 << ", " << y3 << ", " << z3 << ")" << endl;
-    cout << "Point D: (" << x4 << ", " << y4 << ", " << z4 << ")" << endl;
-    cout << "Volume: " << volume() << endl;
+    return fabs(triple) / 6.0;
 }
