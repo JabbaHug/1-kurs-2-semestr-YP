@@ -3,27 +3,35 @@
 
 using namespace std;
 
+/**
+ * @brief Точка входа в программу.
+ * Считывает координаты четырёх точек,
+ * создаёт тетраэдр и выводит его объём.
+ */
 int main() {
     setlocale(LC_ALL, "RU");
 
     try {
-        double x1 = 0, y1 = 0, z1 = 0;
-        double x2 = 0, y2 = 0, z2 = 0;
-        double x3 = 0, y3 = 0, z3 = 0;
-        double x4 = 0, y4 = 0, z4 = 0;
+        Point A, B, C, D;
 
-        cin >> x1 >> y1 >> z1;
-        cin >> x2 >> y2 >> z2;
-        cin >> x3 >> y3 >> z3;
-        cin >> x4 >> y4 >> z4;
+        // Ввод координат точек
+        cin >> A.x >> A.y >> A.z;
+        cin >> B.x >> B.y >> B.z;
+        cin >> C.x >> C.y >> C.z;
+        cin >> D.x >> D.y >> D.z;
 
-        Tetrahedron tetra(x1, y1, z1,
-                          x2, y2, z2,
-                          x3, y3, z3,
-                          x4, y4, z4);
+        // Создание тетраэдра
+        Tetrahedron tetra(A, B, C, D);
 
-        cout << "\n Tetrahedron created successfully\n";
-        tetra.print();
+        cout << "\nTetrahedron created successfully\n";
+
+        // Вывод данных
+        cout << "Point A: (" << A.x << ", " << A.y << ", " << A.z << ")" << endl;
+        cout << "Point B: (" << B.x << ", " << B.y << ", " << B.z << ")" << endl;
+        cout << "Point C: (" << C.x << ", " << C.y << ", " << C.z << ")" << endl;
+        cout << "Point D: (" << D.x << ", " << D.y << ", " << D.z << ")" << endl;
+
+        cout << "Volume: " << tetra.volume() << endl;
     }
     catch (const exception& e) {
         cout << "Error: " << e.what() << endl;
