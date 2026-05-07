@@ -5,6 +5,7 @@ using namespace std;
 
 /**
  * @brief Точка входа в программу.
+ *
  * Считывает координаты четырёх точек,
  * создаёт тетраэдр и выводит его объём.
  */
@@ -12,13 +13,25 @@ int main() {
     setlocale(LC_ALL, "RU");
 
     try {
-        Point A, B, C, D;
+        double x = 0;
+        double y = 0;
+        double z = 0;
 
-        // Ввод координат точек
-        cin >> A.x >> A.y >> A.z;
-        cin >> B.x >> B.y >> B.z;
-        cin >> C.x >> C.y >> C.z;
-        cin >> D.x >> D.y >> D.z;
+        // Ввод первой точки
+        cin >> x >> y >> z;
+        Point A(x, y, z);
+
+        // Ввод второй точки
+        cin >> x >> y >> z;
+        Point B(x, y, z);
+
+        // Ввод третьей точки
+        cin >> x >> y >> z;
+        Point C(x, y, z);
+
+        // Ввод четвёртой точки
+        cin >> x >> y >> z;
+        Point D(x, y, z);
 
         // Создание тетраэдра
         Tetrahedron tetra(A, B, C, D);
@@ -26,10 +39,25 @@ int main() {
         cout << "\nTetrahedron created successfully\n";
 
         // Вывод данных
-        cout << "Point A: (" << A.x << ", " << A.y << ", " << A.z << ")" << endl;
-        cout << "Point B: (" << B.x << ", " << B.y << ", " << B.z << ")" << endl;
-        cout << "Point C: (" << C.x << ", " << C.y << ", " << C.z << ")" << endl;
-        cout << "Point D: (" << D.x << ", " << D.y << ", " << D.z << ")" << endl;
+        cout << "Point A: ("
+             << A.getX() << ", "
+             << A.getY() << ", "
+             << A.getZ() << ")" << endl;
+
+        cout << "Point B: ("
+             << B.getX() << ", "
+             << B.getY() << ", "
+             << B.getZ() << ")" << endl;
+
+        cout << "Point C: ("
+             << C.getX() << ", "
+             << C.getY() << ", "
+             << C.getZ() << ")" << endl;
+
+        cout << "Point D: ("
+             << D.getX() << ", "
+             << D.getY() << ", "
+             << D.getZ() << ")" << endl;
 
         cout << "Volume: " << tetra.volume() << endl;
     }
