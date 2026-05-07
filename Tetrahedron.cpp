@@ -6,7 +6,38 @@
 using namespace std;
 
 /**
- * @brief Конструктор с инициализацией точек
+ * @brief Конструктор точки
+ */
+Point::Point(const double x,
+             const double y,
+             const double z)
+    : x(x), y(y), z(z)
+{
+}
+
+/**
+ * @brief Получить координату X
+ */
+double Point::getX() const {
+    return x;
+}
+
+/**
+ * @brief Получить координату Y
+ */
+double Point::getY() const {
+    return y;
+}
+
+/**
+ * @brief Получить координату Z
+ */
+double Point::getZ() const {
+    return z;
+}
+
+/**
+ * @brief Конструктор тетраэдра
  */
 Tetrahedron::Tetrahedron(const Point& A,
                          const Point& B,
@@ -22,24 +53,24 @@ Tetrahedron::Tetrahedron(const Point& A,
  */
 void Tetrahedron::validate() const {
     if (fabs(volume()) < DBL_EPSILON)
-        throw invalid_argument("Tetrahedron does not exist (points are coplanar).");
+        throw invalid_argument("Tetrahedron does not exist.");
 }
 
 /**
- * @brief Вычисление объёма через смешанное произведение
+ * @brief Вычисление объёма тетраэдра
  */
 double Tetrahedron::volume() const {
-    const double ax = B.x - A.x;
-    const double ay = B.y - A.y;
-    const double az = B.z - A.z;
+    const double ax = B.getX() - A.getX();
+    const double ay = B.getY() - A.getY();
+    const double az = B.getZ() - A.getZ();
 
-    const double bx = C.x - A.x;
-    const double by = C.y - A.y;
-    const double bz = C.z - A.z;
+    const double bx = C.getX() - A.getX();
+    const double by = C.getY() - A.getY();
+    const double bz = C.getZ() - A.getZ();
 
-    const double cx = D.x - A.x;
-    const double cy = D.y - A.y;
-    const double cz = D.z - A.z;
+    const double cx = D.getX() - A.getX();
+    const double cy = D.getY() - A.getY();
+    const double cz = D.getZ() - A.getZ();
 
     const double triple =
         ax * (by * cz - bz * cy)
