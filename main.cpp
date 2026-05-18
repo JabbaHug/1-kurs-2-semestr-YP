@@ -38,7 +38,6 @@ int main() {
 
         cout << "\nTetrahedron created successfully\n";
 
-        // Вывод данных
         cout << "Point A: ("
              << A.getX() << ", "
              << A.getY() << ", "
