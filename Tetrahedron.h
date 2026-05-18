@@ -1,45 +1,7 @@
 #ifndef TETRAHEDRON_H
 #define TETRAHEDRON_H
 
-/**
- * @class Point
- * @brief Класс точки в трёхмерном пространстве
- */
-class Point {
-private:
-    double x; ///< координата X
-    double y; ///< координата Y
-    double z; ///< координата Z
-
-public:
-    /**
-     * @brief Конструктор точки
-     * @param x координата X
-     * @param y координата Y
-     * @param z координата Z
-     */
-    Point(const double x = 0,
-          const double y = 0,
-          const double z = 0);
-
-    /**
-     * @brief Получить координату X
-     * @return координата X
-     */
-    double getX() const;
-
-    /**
-     * @brief Получить координату Y
-     * @return координата Y
-     */
-    double getY() const;
-
-    /**
-     * @brief Получить координату Z
-     * @return координата Z
-     */
-    double getZ() const;
-};
+#include "Point.h"
 
 /**
  * @class Tetrahedron
@@ -49,10 +11,10 @@ public:
  */
 class Tetrahedron {
 private:
-    Point A; ///< первая вершина
-    Point B; ///< вторая вершина
-    Point C; ///< третья вершина
-    Point D; ///< четвёртая вершина
+    Point A;
+    Point B;
+    Point C;
+    Point D;
 
     /**
      * @brief Проверяет существование тетраэдра
