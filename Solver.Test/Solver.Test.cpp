@@ -1,188 +1,113 @@
-#pragma once
+#include "CppUnitTest.h"
+#include "../Solver/PriorityQueue.h"
 
-#include <initializer_list>
-#include <string>
+using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-/**
-* @brief Класс очереди с приоритетом с двусторонним доступом
-*/
-class PriorityQueue
+namespace SolverTest
 {
-private:
-	/**
-	* @param data - Массив элементов очереди
-	*/
-	int* data;
+	TEST_CLASS(PriorityQueueTest)
+	{
+	public:
+		TEST_METHOD(PriorityQueue_InitializerList)
+		{
+			PriorityQueue queue = { 5, 1, 10, 3 };
 
-	/**
-	* @param size - Количество элементов очереди
-	*/
-	size_t size;
+			Assert::IsTrue(queue.getSize() == 4);
+			Assert::IsTrue(queue.peekMin() == 1);
+			Assert::IsTrue(queue.peekMax() == 10);
+			Assert::IsTrue(queue.toString() == "[1, 3, 5, 10]");
+		}
 
-	/**
-	* @param capacity - Вместимость очереди
-	*/
-	size_t capacity;
+		TEST_METHOD(PriorityQueue_Push)
+		{
+			PriorityQueue queue;
+			queue.push(7);
+			queue.push(2);
+			queue.push(9);
 
-	/**
-	* @brief Выбрасывает исключение
-	* @param text - Текст ошибки
-	*/
-	static void error(const std::string text);
+			Assert::IsTrue(queue.toString() == "[2, 7, 9]");
+			Assert::IsTrue(queue[0] == 2);
+			Assert::IsTrue(queue[2] == 9);
+		}
 
-	/**
-	* @brief Увеличивает вместимость очереди
-	* @param newSize - Требуемый размер очереди
-	*/
-	void reserve(const size_t newSize);
+		TEST_METHOD(PriorityQueue_PopMin)
+		{
+			PriorityQueue queue = { 4, 12, 1, 8 };
 
-	/**
-	* @brief Возвращает позицию для вставки элемента
-	* @param value - Значение элемента
-	* @return Позиция для вставки элемента
-	*/
-	size_t getInsertIndex(const int value) const;
+			Assert::IsTrue(queue.popMin() == 1);
+			Assert::IsTrue(queue.toString() == "[4, 8, 12]");
+		}
 
-public:
-	/**
-	* @brief Конструктор, создающий пустую очередь
-	*/
-	PriorityQueue();
+		TEST_METHOD(PriorityQueue_PopMax)
+		{
+			PriorityQueue queue = { 4, 12, 1, 8 };
 
-	/**
-	* @brief Конструктор со списком инициализации
-	* @param initList - Список инициализации
-	*/
-	PriorityQueue(const std::initializer_list<int> initList);
+			Assert::IsTrue(queue.popMax() == 12);
+			Assert::IsTrue(queue.toString() == "[1, 4, 8]");
+		}
 
-	/**
-	* @brief Конструктор копирования
-	* @param other - Очередь, из которой копируются элементы
-	*/
-	PriorityQueue(const PriorityQueue& other);
+		TEST_METHOD(PriorityQueue_Find_Contains_Remove)
+		{
+			PriorityQueue queue = { 5, 2, 9, 7 };
 
-	/**
-	* @brief Конструктор перемещения
-	* @param other - Очередь, из которой перемещаются элементы
-	*/
-	PriorityQueue(PriorityQueue&& other) noexcept;
+			Assert::IsTrue(queue.find(7) == 2);
+			Assert::IsTrue(queue.contains(9));
+			Assert::IsFalse(queue.contains(4));
 
-	/**
-	* @brief Деструктор
-	*/
-	~PriorityQueue();
+			queue.remove(7);
+			Assert::IsTrue(queue.toString() == "[2, 5, 9]");
+		}
 
-	/**
-	* @brief Оператор присваивания
-	* @param other - Очередь, элементы которой присваиваются текущей очереди
-	* @return Ссылка на текущую очередь
-	*/
-	PriorityQueue& operator = (const PriorityQueue& other);
+		TEST_METHOD(PriorityQueue_CopyConstructor)
+		{
+			PriorityQueue queue = { 3, 1, 6 };
+			PriorityQueue copy(queue);
 
-	/**
-	* @brief Оператор перемещающего присваивания
-	* @param other - Очередь, элементы которой перемещаются в текущую очередь
-	* @return Ссылка на текущую очередь
-	*/
-	PriorityQueue& operator = (PriorityQueue&& other) noexcept;
+			queue.push(10);
 
-	/**
-	* @brief Добавляет элемент в очередь
-	* @param value - Значение элемента
-	*/
-	void push(const int value);
+			Assert::IsTrue(copy.toString() == "[1, 3, 6]");
+			Assert::IsTrue(queue.toString() == "[1, 3, 6, 10]");
+		}
 
-	/**
-	* @brief Добавляет элемент в очередь
-	* @param value - Значение элемента
-	*/
-	void insert(const int value);
+		TEST_METHOD(PriorityQueue_Assignment)
+		{
+			PriorityQueue first = { 1, 2, 3 };
+			PriorityQueue second = { 9, 8 };
 
-	/**
-	* @brief Удаляет элемент с наименьшим приоритетом
-	* @return Удалённый элемент
-	*/
-	int popMin();
+			second = first;
+			first.popMax();
 
-	/**
-	* @brief Удаляет элемент с наибольшим приоритетом
-	* @return Удалённый элемент
-	*/
-	int popMax();
+			Assert::IsTrue(second.toString() == "[1, 2, 3]");
+			Assert::IsTrue(first.toString() == "[1, 2]");
+		}
 
-	/**
-	* @brief Возвращает элемент с наименьшим приоритетом
-	* @return Элемент с наименьшим приоритетом
-	*/
-	int peekMin() const;
+		TEST_METHOD(PriorityQueue_MoveConstructor)
+		{
+			PriorityQueue queue = { 3, 1, 2 };
+			PriorityQueue moved(std::move(queue));
 
-	/**
-	* @brief Возвращает элемент с наибольшим приоритетом
-	* @return Элемент с наибольшим приоритетом
-	*/
-	int peekMax() const;
+			Assert::IsTrue(moved.toString() == "[1, 2, 3]");
+			Assert::IsTrue(queue.isEmpty());
+		}
 
-	/**
-	* @brief Удаляет элемент по значению
-	* @param value - Значение удаляемого элемента
-	*/
-	void remove(const int value);
+		TEST_METHOD(PriorityQueue_Operators)
+		{
+			PriorityQueue queue = { 3, 1 };
+			int value = 0;
 
-	/**
-	* @brief Ищет элемент по значению
-	* @param value - Искомое значение
-	* @return Индекс элемента или -1 при отсутствии
-	*/
-	int find(const int value) const;
+			queue << 5;
+			queue >> value;
 
-	/**
-	* @brief Проверяет наличие элемента в очереди
-	* @param value - Искомое значение
-	* @return true, если элемент найден, иначе false
-	*/
-	bool contains(const int value) const;
+			Assert::IsTrue(value == 5);
+			Assert::IsTrue(queue.toString() == "[1, 3]");
+		}
 
-	/**
-	* @brief Проверяет очередь на пустоту
-	* @return true, если очередь пустая, иначе false
-	*/
-	bool isEmpty() const;
+		TEST_METHOD(PriorityQueue_EmptyException)
+		{
+			PriorityQueue queue;
 
-	/**
-	* @brief Возвращает количество элементов очереди
-	* @return Количество элементов очереди
-	*/
-	size_t getSize() const;
-
-	/**
-	* @brief Возвращает элемент по индексу
-	* @param index - Индекс элемента
-	* @return Значение элемента
-	*/
-	int operator [] (const size_t index) const;
-
-	/**
-	* @brief Добавляет элемент в очередь
-	* @param value - Значение элемента
-	* @return Ссылка на текущую очередь
-	*/
-	PriorityQueue& operator << (const int value);
-
-	/**
-	* @brief Удаляет элемент с наибольшим приоритетом
-	* @param value - Переменная, в которую записывается удалённый элемент
-	* @return Ссылка на текущую очередь
-	*/
-	PriorityQueue& operator >> (int& value);
-
-	/**
-	* @brief Очищает очередь
-	*/
-	void clear();
-
-	/**
-	* @brief Возвращает очередь в виде строки
-	* @return Строка с элементами очереди
-	*/
-	std::string toString() const;
-};
+			Assert::ExpectException<std::runtime_error>([&queue]() { queue.peekMin(); });
+			Assert::ExpectException<std::runtime_error>([&queue]() { queue.popMax(); });
+		}
+	};
+}
